@@ -1,0 +1,42 @@
+%NAME%
+htop
+
+%VERSION%
+3.4.1-1
+
+%BASE%
+htop
+
+%DESC%
+Interactive process viewer
+
+%URL%
+https://htop.dev
+
+%ARCH%
+x86_64
+
+%BUILDDATE%
+1780000000
+
+%INSTALLDATE%
+1788900000
+
+%PACKAGER%
+Arch Linux <arch@example.org>
+
+%SIZE%
+1258291
+
+%LICENSE%
+GPL2
+
+%REASON%
+1
+
+%DEPENDS%
+glibc
+ncurses
+
+%OPTDEPENDS%
+lm_sensors: sensors support

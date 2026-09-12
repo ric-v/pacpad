@@ -1,0 +1,44 @@
+%NAME%
+ripgrep
+
+%VERSION%
+15.2.0-1
+
+%BASE%
+ripgrep
+
+%DESC%
+A search tool that combines the usability of ag with the raw speed of grep
+
+%URL%
+https://github.com/BurntSushi/ripgrep
+
+%ARCH%
+x86_64_v3
+
+%BUILDDATE%
+1784392535
+
+%INSTALLDATE%
+1788972672
+
+%PACKAGER%
+CachyOS <admin@cachyos.org>
+
+%SIZE%
+3742597
+
+%LICENSE%
+MIT OR Unlicense
+
+%VALIDATION%
+pgp
+
+%DEPENDS%
+glibc
+libgcc
+pcre2
+
+%XDATA%
+pkgtype=pkg
+
