@@ -155,7 +155,7 @@ fn render_table(frame: &mut Frame, area: Rect, state: &AppState) {
             rows[i],
             &state.apps.tuiapps,
             highlight,
-            theme::MAGENTA,
+            theme::RED,
         );
     }
 }

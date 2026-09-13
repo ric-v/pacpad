@@ -54,7 +54,7 @@ pub fn render(frame: &mut Frame, state: &AppState) {
         Span::styled(
             " pac",
             Style::default()
-                .fg(theme::MAGENTA)
+                .fg(theme::RED)
                 .add_modifier(Modifier::BOLD),
         ),
         Span::styled(
@@ -421,5 +421,73 @@ mod tests {
             .to_ascii_lowercase()
             .contains("error"));
         assert!(!"done".to_ascii_lowercase().contains("error"));
+    }
+
+    #[test]
+    fn preview_terminal_render() {
+        use ratatui::backend::TestBackend;
+        use ratatui::Terminal;
+
+        let mut s = state();
+        s.tick = 20; // past splash screen
+
+        let backend = TestBackend::new(100, 24);
+        let mut terminal = Terminal::new(backend).unwrap();
+        terminal.draw(|f| render(f, &s)).unwrap();
+
+        {
+            let buffer = terminal.backend().buffer();
+            println!("\n=== TUI RENDER PREVIEW (Washi / Sumi-e Palette) ===");
+            for y in 0..buffer.area.height {
+                let mut line = String::new();
+                for x in 0..buffer.area.width {
+                    let cell = buffer.cell((x, y)).unwrap();
+                    let ch = cell.symbol();
+                    let fg_str = match cell.fg {
+                        ratatui::style::Color::Rgb(r, g, b) => format!("\x1b[38;2;{r};{g};{b}m"),
+                        _ => "\x1b[39m".to_string(),
+                    };
+                    let bg_str = match cell.bg {
+                        ratatui::style::Color::Rgb(r, g, b) => format!("\x1b[48;2;{r};{g};{b}m"),
+                        _ => "\x1b[49m".to_string(),
+                    };
+                    line.push_str(&format!("{fg_str}{bg_str}{ch}\x1b[0m"));
+                }
+                println!("{line}");
+            }
+            // Verify borders and background use the sumi-e palette
+            assert_eq!(buffer.cell((0, 0)).unwrap().fg, theme::BORDER);
+            assert_eq!(buffer.cell((0, 0)).unwrap().bg, theme::BG);
+        }
+
+        // Also test rendering the Help popup
+        s.help_open = true;
+        terminal.draw(|f| render(f, &s)).unwrap();
+        {
+            let buffer_help = terminal.backend().buffer();
+            println!("\n=== TUI HELP POPUP PREVIEW ===");
+            for y in 0..buffer_help.area.height {
+                let mut line = String::new();
+                for x in 0..buffer_help.area.width {
+                    let cell = buffer_help.cell((x, y)).unwrap();
+                    let ch = cell.symbol();
+                    let fg_str = match cell.fg {
+                        ratatui::style::Color::Rgb(r, g, b) => format!("\x1b[38;2;{r};{g};{b}m"),
+                        _ => "\x1b[39m".to_string(),
+                    };
+                    let bg_str = match cell.bg {
+                        ratatui::style::Color::Rgb(r, g, b) => format!("\x1b[48;2;{r};{g};{b}m"),
+                        _ => "\x1b[49m".to_string(),
+                    };
+                    line.push_str(&format!("{fg_str}{bg_str}{ch}\x1b[0m"));
+                }
+                println!("{line}");
+            }
+
+            // Verify help popup uses ACCENT (indigo) border
+            let popup_top_y = (24 - 18) / 2; // centered
+            let popup_left_x = (100 - 60) / 2;
+            assert_eq!(buffer_help.cell((popup_left_x, popup_top_y)).unwrap().fg, theme::ACCENT);
+        }
     }
 }

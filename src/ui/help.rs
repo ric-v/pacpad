@@ -71,12 +71,12 @@ pub fn render(frame: &mut Frame, area: Rect) {
         " Keybindings ",
         Style::default()
             .fg(theme::BG)
-            .bg(theme::YELLOW)
+            .bg(theme::ACCENT)
             .add_modifier(Modifier::BOLD),
     )]);
     let block = Block::bordered()
         .border_type(BorderType::Plain)
-        .border_style(Style::default().fg(theme::YELLOW))
+        .border_style(Style::default().fg(theme::ACCENT))
         .style(Style::default().bg(theme::BG).fg(theme::FG))
         .title(title)
         .title_alignment(Alignment::Center);
