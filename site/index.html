@@ -170,7 +170,7 @@
           <div>
             <p class="lead rv">Nothing runs until you've seen the literal command. <b>For the packages that can brick a system, a keypress isn't enough.</b></p>
             <ul class="ticks rv">
-              <li><span class="c-g">✓</span> every action opens a modal with the exact argv first</li>
+              <li><span class="c-g">✓</span> every install, remove, mark and update opens a modal with the exact argv first</li>
               <li><span class="c-g">✓</span> removal defaults to <code>-Rns</code>, and <kbd>r</kbd> in the modal toggles plain <code>-R</code></li>
               <li><span class="c-g">✓</span> <code>--dry-run</code> prints every write and runs nothing</li>
               <li><span class="c-g">✓</span> the Apps tab only touches <code>.desktop</code> files marked <code>X-PacPad-Managed=true</code></li>
@@ -286,7 +286,7 @@
         <div class="faq" id="faq-list">
           <div class="qa rv"><button type="button" class="q" aria-expanded="false"><span class="ar">▸</span> Does it replace pacman or yay?</button><div class="a"><div><p>No. It reads pacman's database files to show you what's there. Every change is a plain <code>pacman</code>, <code>yay</code> or <code>paru</code> command that you see before it runs.</p></div></div></div>
           <div class="qa rv"><button type="button" class="q" aria-expanded="false"><span class="ar">▸</span> Does it need root?</button><div class="a"><div><p>No. pacpad runs as you. Write actions go through <code>sudo pacman</code> or your AUR helper, which asks for your password inside pacpad's screen.</p></div></div></div>
-          <div class="qa rv"><button type="button" class="q" aria-expanded="false"><span class="ar">▸</span> Can I try it without changing anything?</button><div class="a"><div><p>Yes. Run <code>pacpad --dry-run</code>. Every write prints its command and waits for a key without running anything, and launcher writes in the Apps tab are skipped too.</p></div></div></div>
+          <div class="qa rv"><button type="button" class="q" aria-expanded="false"><span class="ar">▸</span> Can I try it without changing anything?</button><div class="a"><div><p>Yes. Run <code>pacpad --dry-run</code>. Every write shows the command it would run in a <code>[dry-run] would run: …</code> banner and runs nothing, and launcher writes in the Apps tab are skipped too.</p></div></div></div>
           <div class="qa rv"><button type="button" class="q" aria-expanded="false"><span class="ar">▸</span> Will it touch launchers I made some other way?</button><div class="a"><div><p>No. It only lists, edits and removes <code>.desktop</code> files carrying its own <code>X-PacPad-Managed=true</code> marker, named <code>pacpad-&lt;name&gt;.desktop</code>.</p></div></div></div>
           <div class="qa rv"><button type="button" class="q" aria-expanded="false"><span class="ar">▸</span> Do I need omarchy?</button><div class="a"><div><p>No. It's built in that spirit, but any Arch or Arch-based system with pacman works. Webapps need a Chromium-family browser because they use <code>--app</code> mode, which Firefox doesn't have.</p></div></div></div>
           <div class="qa rv"><button type="button" class="q" aria-expanded="false"><span class="ar">▸</span> Where does it keep its config?</button><div class="a"><div><p><code>~/.config/pacpad/config.toml</code>, and every key is optional: <code>browser</code>, <code>terminal</code> and <code>aur_helper</code>. The package index cache lives in <code>~/.cache/pacpad/index.bin</code>.</p></div></div></div>
