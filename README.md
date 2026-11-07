@@ -55,6 +55,13 @@ and a recent `pacman`.
 Under active development. Packaging (AUR `PKGBUILD`, CI, release binaries) is
 still to come.
 
+## Website
+
+The project site lives in [`site/`](site/): plain HTML, CSS and JS with no build step.
+Preview it with `python3 -m http.server -d site` and open http://localhost:8000.
+`.github/workflows/pages.yml` deploys it to GitHub Pages on every push to `main`
+that touches `site/`.
+
 ## License
 
 Apache-2.0 — see [LICENSE](LICENSE).

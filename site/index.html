@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>pacpad: a terminal app manager for Arch Linux</title>
+  <meta name="description" content="pacpad is a terminal app manager for Arch Linux. One TUI for repo and AUR packages, plus the webapp and TUI-app launchers you create. Every change is a plain pacman or yay command, shown before it runs." />
+  <meta name="theme-color" content="#121211" />
+  <meta name="color-scheme" content="dark" />
+  <meta property="og:title" content="pacpad: a terminal app manager for Arch Linux" />
+  <meta property="og:description" content="One TUI for repo and AUR packages, webapps and TUI launchers. Every change is a plain pacman or yay command, shown before it runs." />
+  <meta property="og:type" content="website" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="preload" href="fonts/jetbrains-mono-regular.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="fonts/jetbrains-mono-extrabold.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="styles.css" />
+  <script>document.documentElement.classList.add("js");</script>
+</head>
+<body>
+  <a class="skip" href="#main">skip to content</a>
+
+  <!-- boot screen: first visit per session only, any key or click skips it -->
+  <div class="boot" id="boot" aria-hidden="true"><pre class="boot-log"></pre></div>
+
+  <!-- the window edge: the whole site sits inside one TUI frame -->
+  <div class="edge" aria-hidden="true"><span class="edge-ttl"><span class="c-r">pac</span><span class="c-a">pad</span></span><span class="edge-r">v0.1.0 · pre-release</span></div>
+
+  <header class="bar" id="bar">
+    <nav class="tabs" id="tabs" aria-label="Sections">
+      <span class="tab-hl" aria-hidden="true"></span>
+      <a href="#top" data-sec="top"><span class="tk">1</span> pacpad</a><i aria-hidden="true">│</i>
+      <a href="#why" data-sec="why"><span class="tk">2</span> why</a><i aria-hidden="true">│</i>
+      <a href="#how" data-sec="how"><span class="tk">3</span> how</a><i aria-hidden="true">│</i>
+      <a href="#safety" data-sec="safety"><span class="tk">4</span> safety</a><i aria-hidden="true">│</i>
+      <a href="#install" data-sec="install"><span class="tk">5</span> install</a><i aria-hidden="true">│</i>
+      <a href="#keys" data-sec="keys"><span class="tk">6</span> keys</a><i aria-hidden="true">│</i>
+      <a href="#faq" data-sec="faq"><span class="tk">7</span> faq</a>
+    </nav>
+    <div class="bar-r">
+      <button type="button" class="lnk" data-act="palette" aria-label="Open command palette"><kbd>/</kbd> <span class="hide-s">search</span></button>
+      <button type="button" class="lnk" data-act="help" aria-label="Show keyboard shortcuts"><kbd>?</kbd> <span class="hide-s">keys</span></button>
+      <a class="lnk" href="https://github.com/ric-v/pacpad">github <span aria-hidden="true">↗</span></a>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <!-- 1 · hero + live demo -->
+    <section id="top" class="sec hero" data-name="pacpad">
+      <div class="hero-grid">
+        <div class="hero-l">
+          <p class="idx rv" aria-hidden="true">reading /var/lib/pacman <span class="idx-bar"><span></span></span> <span class="idx-n">26</span> packages · cached</p>
+          <h1 class="word rv"><span class="c-r">pac</span><span class="c-a">pad</span><span class="sr">: a terminal app manager for Arch Linux</span></h1>
+          <p class="sub rv">A terminal app manager for Arch Linux. <b>Repo and AUR packages, webapps and TUI launchers, in one TUI.</b> Every change is a plain pacman or yay command, shown to you before it runs.</p>
+          <div class="cta rv">
+            <button type="button" class="btn pri" data-act="drive"><kbd>d</kbd> drive the demo</button>
+            <a class="btn" href="#install" data-act="install"><kbd>i</kbd> install</a>
+            <button type="button" class="btn ghost" data-act="copy" data-copy="git clone https://github.com/ric-v/pacpad && cd pacpad && cargo build --release"><kbd>y</kbd> copy build command</button>
+          </div>
+        </div>
+        <div class="pane qi rv" data-title="pacman -Qi pacpad" data-title-r="someday">
+          <dl class="qi-l">
+            <div><dt>Name</dt><dd>pacpad</dd></div>
+            <div><dt>Version</dt><dd>0.1.0 <span class="c-m">pre-release</span></dd></div>
+            <div><dt>Description</dt><dd>A terminal app manager for Arch</dd></div>
+            <div><dt>URL</dt><dd><a href="https://github.com/ric-v/pacpad">github.com/ric-v/pacpad</a></dd></div>
+            <div><dt>Licenses</dt><dd>Apache-2.0</dd></div>
+            <div><dt>Built With</dt><dd>rust · ratatui · crossterm</dd></div>
+            <div><dt>Depends On</dt><dd>pacman  sudo</dd></div>
+            <div><dt>Optional Deps</dt><dd>yay or paru <span class="c-d">AUR packages</span><br />chromium-family browser <span class="c-d">webapps</span><br />a terminal emulator <span class="c-d">TUI apps</span></dd></div>
+            <div><dt>Links libalpm</dt><dd class="c-g">no</dd></div>
+          </dl>
+        </div>
+      </div>
+
+      <div class="pane demo-pane rv" id="demo" data-title="live demo" data-title-r="not a recording: it's playable">
+        <div class="demo" id="demo-el" tabindex="0" role="application" aria-roledescription="interactive demo" aria-label="pacpad demo. Press Enter or d to take control, Escape to leave.">
+          <pre class="tui" aria-hidden="true"></pre>
+          <button type="button" class="demo-cover" data-act="drive" tabindex="-1"><span><kbd>d</kbd> or click to take control</span></button>
+        </div>
+        <div class="demo-ctl">
+          <div class="dc-l">
+            <button type="button" class="chip" data-act="autoplay" aria-pressed="true"><span class="led"></span><span class="lbl">autoplay</span></button>
+            <button type="button" class="chip" data-act="reset">⟲ reset</button>
+            <button type="button" class="chip" data-act="demo-help">F1 help</button>
+            <span class="dc-mode" id="demo-mode">watching</span>
+          </div>
+          <div class="keyviz" id="keyviz" aria-hidden="true"></div>
+        </div>
+        <div class="touchkeys" id="touchkeys" aria-label="Demo keys">
+          <button type="button" data-k="1">1</button><button type="button" data-k="2">2</button><button type="button" data-k="3">3</button><button type="button" data-k="4">4</button>
+          <button type="button" data-k="left">←</button><button type="button" data-k="up">↑</button><button type="button" data-k="down">↓</button><button type="button" data-k="right">→</button>
+          <button type="button" data-k="space">space</button><button type="button" data-k="enter">enter</button><button type="button" data-k="esc">esc</button><button type="button" data-k="tab">tab</button>
+          <button type="button" data-k="i">i</button><button type="button" data-k="d">d</button><button type="button" data-k="a">a</button><button type="button" data-k="F1">F1</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2 · why -->
+    <section id="why" class="sec" data-name="why">
+      <div class="pane" data-title="2 why" data-title-r="pacman -Qe · -Qdt · -Qm · yay -S · rm ~/.local/share/applications/…">
+        <p class="lead rv">Keeping an Arch box tidy means remembering a dozen pacman flags, switching to yay for anything from the AUR, and keeping track of the app launchers you made by hand. <b>pacpad puts that in one place without hiding what's underneath.</b></p>
+        <div class="tbl rv" role="region" aria-label="Without and with pacpad" tabindex="0">
+          <table>
+            <thead><tr><th>you want to</th><th>without pacpad</th><th>in pacpad</th></tr></thead>
+            <tbody>
+              <tr><td>see what you installed on purpose</td><td><code>pacman -Qe</code></td><td><kbd>→</kbd> Explicit filter</td></tr>
+              <tr><td>find orphaned dependencies</td><td><code>pacman -Qdt</code></td><td><kbd>→</kbd> Orphans filter</td></tr>
+              <tr><td>list what came from the AUR</td><td><code>pacman -Qm</code></td><td><kbd>→</kbd> Foreign filter</td></tr>
+              <tr><td>install something from the AUR</td><td>remember it's foreign, use <code>yay -S</code></td><td><kbd>i</kbd> picks the helper for you</td></tr>
+              <tr><td>stop a package being explicit</td><td><code>sudo pacman -D --asdeps</code></td><td><kbd>D</kbd></td></tr>
+              <tr><td>delete a webapp you made</td><td>hunt for its <code>.desktop</code> file</td><td><kbd>3</kbd> Apps, <kbd>d</kbd></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="why-grid">
+          <article class="mini rv"><h3><span class="c-y">›</span> one list, many views</h3><p>Explicit, dependency, orphan and AUR packages are filters on the same list, with a detail pane beside it. Sort by name, size or install date.</p></article>
+          <article class="mini rv"><h3><span class="c-y">›</span> launchers get a home</h3><p>omarchy-style webapp and TUI launchers are easy to create and hard to find again. The Apps tab lists every launcher pacpad made and removes it cleanly.</p></article>
+          <article class="mini rv"><h3><span class="c-y">›</span> no terminal handover</h3><p>sudo's password, pacman's <code>[Y/n]</code> and yay's PKGBUILD review run on a terminal pacpad owns, drawn inside its own screen.</p></article>
+          <article class="mini rv"><h3><span class="c-y">›</span> survives pacman upgrades</h3><p>pacpad reads pacman's database files directly instead of linking libalpm, so a soname bump can't break it.</p></article>
+        </div>
+        <p class="note rv"><span class="c-f">what it won't do:</span> replace pacman, keep its own package state, or hide commands from you. Every write is something you could have typed yourself.</p>
+      </div>
+    </section>
+
+    <!-- 3 · how -->
+    <section id="how" class="sec" data-name="how">
+      <div class="pane" data-title="3 how it works" data-title-r="←→ or click a node">
+        <p class="lead rv">Three paths that never share code that touches your system: <b class="c-a">read</b> what's installed, <b class="c-r">write</b> through commands you approve, and manage <b class="c-g">launchers</b>.</p>
+        <div class="flow rv" id="flow">
+          <div class="lane" data-lane="read">
+            <span class="lane-n c-a">read</span>
+            <div class="track"><span class="pkt"></span>
+              <button type="button" class="node" data-n="conf">pacman.conf</button><span class="wire"></span>
+              <button type="button" class="node" data-n="dbs">local + sync dbs</button><span class="wire"></span>
+              <button type="button" class="node" data-n="cache">index.bin</button><span class="wire"></span>
+              <button type="button" class="node" data-n="tui">TUI</button>
+            </div>
+          </div>
+          <div class="lane" data-lane="write">
+            <span class="lane-n c-r">write</span>
+            <div class="track"><span class="pkt"></span>
+              <button type="button" class="node" data-n="action">action</button><span class="wire"></span>
+              <button type="button" class="node" data-n="plan">pacman | yay | paru</button><span class="wire"></span>
+              <button type="button" class="node red" data-n="confirm">confirm</button><span class="wire"></span>
+              <button type="button" class="node" data-n="pty">embedded pty</button>
+            </div>
+          </div>
+          <div class="lane" data-lane="apps">
+            <span class="lane-n c-g">apps</span>
+            <div class="track"><span class="pkt"></span>
+              <button type="button" class="node" data-n="form">name + url | cmd</button><span class="wire"></span>
+              <button type="button" class="node" data-n="resolve">browser | terminal</button><span class="wire"></span>
+              <button type="button" class="node" data-n="desktop">pacpad-*.desktop</button>
+            </div>
+          </div>
+        </div>
+        <div class="flow-det rv" id="flow-det" aria-live="polite">
+          <div class="fd-h"><span class="fd-t"></span><span class="fd-p c-f"></span></div>
+          <p class="fd-b"></p>
+          <pre class="fd-c"></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4 · safety -->
+    <section id="safety" class="sec" data-name="safety">
+      <div class="pane red-pane" data-title="! safety" data-title-r="see it, then run it">
+        <div class="safe-grid">
+          <div>
+            <p class="lead rv">Nothing runs until you've seen the literal command. <b>For the packages that can brick a system, a keypress isn't enough.</b></p>
+            <ul class="ticks rv">
+              <li><span class="c-g">✓</span> every install, remove, mark and update opens a modal with the exact argv first</li>
+              <li><span class="c-g">✓</span> removal defaults to <code>-Rns</code>, and <kbd>r</kbd> in the modal toggles plain <code>-R</code></li>
+              <li><span class="c-g">✓</span> <code>--dry-run</code> prints every write and runs nothing</li>
+              <li><span class="c-g">✓</span> the Apps tab only touches <code>.desktop</code> files marked <code>X-PacPad-Managed=true</code></li>
+            </ul>
+            <div class="tbl rv">
+              <table class="prot">
+                <thead><tr><th>protected</th><th>because it's</th></tr></thead>
+                <tbody>
+                  <tr><td>pacman · sudo · systemd · glibc</td><td>a critical system package</td></tr>
+                  <tr><td>linux*</td><td>a kernel package</td></tr>
+                  <tr><td>anything in <code>base</code></td><td>a member of the base group</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="guard rv" id="guard">
+            <div class="gm">
+              <div class="gm-t">Confirm Removal</div>
+              <p class="c-d">1 package: glibc</p>
+              <p class="c-f">$</p>
+              <p class="B">sudo pacman -Rns glibc</p>
+              <p class="c-r B gm-w">⚠ this touches a protected package:</p>
+              <p class="c-r">&nbsp;&nbsp;glibc — a critical system package</p>
+              <label class="gm-in"><span class="c-d">type REMOVE to confirm:</span> <input id="guard-in" maxlength="12" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-label="Type REMOVE to confirm" /></label>
+              <div class="gm-k"><button type="button" class="kh" data-act="guard-cancel"><span class="kk">esc</span> cancel</button><button type="button" class="kh" data-act="guard-ok" id="guard-ok" disabled><span class="kk">enter</span> confirm</button></div>
+            </div>
+            <p class="gm-msg c-f" id="guard-msg">try it. this one's safe: it's a website.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5 · install -->
+    <section id="install" class="sec" data-name="install">
+      <div class="pane" data-title="5 install" data-title-r="rust ≥ 1.82 · build from source">
+        <div class="inst-grid">
+          <div class="shell-wrap rv">
+            <div class="shell" id="shell" aria-label="Simulated terminal with the pacpad repo checked out. Type help for commands.">
+              <div class="sh-out" role="log" aria-live="polite"></div>
+              <label class="sh-line"><span class="sh-ps1"></span><input class="sh-in" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="Shell input" /></label>
+            </div>
+          </div>
+          <div class="inst-side">
+            <ol class="steps rv">
+              <li><span class="sn">1</span><div><b>get the source</b><button type="button" class="cp" data-act="copy" data-copy="git clone https://github.com/ric-v/pacpad && cd pacpad"><code>git clone https://github.com/ric-v/pacpad &amp;&amp; cd pacpad</code><span class="cpi">copy</span></button></div></li>
+              <li><span class="sn">2</span><div><b>build it</b> <span class="c-f">thin LTO, stripped</span><button type="button" class="cp" data-act="copy" data-copy="cargo build --release"><code>cargo build --release</code><span class="cpi">copy</span></button></div></li>
+              <li><span class="sn">3</span><div><b>put it on PATH</b><button type="button" class="cp" data-act="copy" data-copy="install -Dm755 target/release/pacpad ~/.local/bin/pacpad"><code>install -Dm755 target/release/pacpad ~/.local/bin/pacpad</code><span class="cpi">copy</span></button></div></li>
+              <li><span class="sn">4</span><div><b>run it</b><button type="button" class="cp" data-act="copy" data-copy="pacpad"><code>pacpad</code><span class="cpi">copy</span></button></div></li>
+            </ol>
+            <div class="tbl rv">
+              <table>
+                <thead><tr><th>needs</th><th>detection order</th></tr></thead>
+                <tbody>
+                  <tr><td>AUR helper</td><td>config, then <code>yay</code>, then <code>paru</code>. Without one, repo packages still work.</td></tr>
+                  <tr><td>webapp browser</td><td>config, your default if Chromium-based, then Chrome, Chromium, Brave, Vivaldi</td></tr>
+                  <tr><td>TUI terminal</td><td>config, <code>xdg-terminal-exec</code>, <code>$TERMINAL</code>, then Ghostty, kitty, WezTerm, Alacritty, foot</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="note rv"><span class="c-m">not packaged yet.</span> An AUR <code>PKGBUILD</code> and release binaries are still to come.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6 · keys -->
+    <section id="keys" class="sec" data-name="keys">
+      <div class="pane" data-title="6 keys" data-title-r="press one: it lights up">
+        <div class="keys-grid" id="keys-grid">
+          <div class="kg rv"><h3 class="c-a">global</h3>
+            <p><kbd data-k="1">1</kbd>-<kbd data-k="4">4</kbd> <kbd data-k="tab">tab</kbd><span>switch tabs</span></p>
+            <p><kbd data-k="F1">F1</kbd><span>keybinding help</span></p>
+            <p><kbd data-k="q">q</kbd> <kbd>ctrl+c</kbd><span>quit</span></p>
+          </div>
+          <div class="kg rv"><h3 class="c-a">installed</h3>
+            <p><kbd data-k="up">↑</kbd><kbd data-k="down">↓</kbd> <kbd data-k="j">j</kbd><kbd data-k="k">k</kbd><span>move</span></p>
+            <p><kbd data-k="left">←</kbd><kbd data-k="right">→</kbd> <kbd data-k="h">h</kbd><kbd data-k="l">l</kbd><span>cycle filter</span></p>
+            <p><kbd data-k="space">space</kbd><span>select</span></p>
+            <p><kbd data-k="s">s</kbd><span>cycle sort</span></p>
+            <p><kbd data-k="i">i</kbd> <kbd data-k="d">d</kbd> <kbd data-k="r">r</kbd><span>install · remove · reinstall</span></p>
+            <p><kbd data-k="e">e</kbd> <kbd data-k="D">D</kbd><span>mark explicit · as dependency</span></p>
+            <p><kbd data-k="u">u</kbd><span>update system</span></p>
+            <p><kbd data-k="f">f</kbd> <kbd data-k="o">o</kbd><span>list files · open URL</span></p>
+            <p><kbd data-k="/">/</kbd><span>jump to search</span></p>
+          </div>
+          <div class="kg rv"><h3 class="c-a">search</h3>
+            <p><kbd>type</kbd><span>filter by name or description</span></p>
+            <p><kbd data-k="enter">enter</kbd><span>install</span></p>
+            <p><kbd data-k="esc">esc</kbd><span>clear query</span></p>
+            <h3 class="c-a">apps</h3>
+            <p><kbd data-k="a">a</kbd> <kbd data-k="t">t</kbd><span>add webapp · add TUI app</span></p>
+            <p><kbd data-k="enter">enter</kbd><span>launch</span></p>
+            <p><kbd data-k="e">e</kbd> <kbd data-k="d">d</kbd><span>edit · remove</span></p>
+          </div>
+          <div class="kg site rv"><h3 class="c-y">this website</h3>
+            <p><kbd data-k="1">1</kbd>-<kbd data-k="7">7</kbd><span>jump to a section</span></p>
+            <p><kbd data-k="j">j</kbd> <kbd data-k="k">k</kbd><span>next · previous panel</span></p>
+            <p><kbd data-k="g">g</kbd> <kbd data-k="G">G</kbd><span>top · bottom</span></p>
+            <p><kbd data-k="/">/</kbd> <kbd>ctrl+k</kbd><span>command palette</span></p>
+            <p><kbd data-k="d">d</kbd><span>drive the demo</span></p>
+            <p><kbd data-k="i">i</kbd><span>open the shell</span></p>
+            <p><kbd data-k="y">y</kbd><span>copy build command</span></p>
+            <p><kbd data-k="?">?</kbd><span>this list</span></p>
+            <p><kbd data-k="esc">esc</kbd><span>let go of the demo or shell</span></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7 · faq -->
+    <section id="faq" class="sec" data-name="faq">
+      <div class="pane" data-title="7 faq" data-title-r="enter or click to expand">
+        <div class="faq" id="faq-list">
+          <div class="qa rv"><button type="button" class="q" aria-expanded="false"><span class="ar">▸</span> Does it replace pacman or yay?</button><div class="a"><div><p>No. It reads pacman's database files to show you what's there. Every change is a plain <code>pacman</code>, <code>yay</code> or <code>paru</code> command that you see before it runs.</p></div></div></div>
+          <div class="qa rv"><button type="button" class="q" aria-expanded="false"><span class="ar">▸</span> Does it need root?</button><div class="a"><div><p>No. pacpad runs as you. Write actions go through <code>sudo pacman</code> or your AUR helper, which asks for your password inside pacpad's screen.</p></div></div></div>
+          <div class="qa rv"><button type="button" class="q" aria-expanded="false"><span class="ar">▸</span> Can I try it without changing anything?</button><div class="a"><div><p>Yes. Run <code>pacpad --dry-run</code>. Every write shows the command it would run in a <code>[dry-run] would run: …</code> banner and runs nothing, and launcher writes in the Apps tab are skipped too.</p></div></div></div>
+          <div class="qa rv"><button type="button" class="q" aria-expanded="false"><span class="ar">▸</span> Will it touch launchers I made some other way?</button><div class="a"><div><p>No. It only lists, edits and removes <code>.desktop</code> files carrying its own <code>X-PacPad-Managed=true</code> marker, named <code>pacpad-&lt;name&gt;.desktop</code>.</p></div></div></div>
+          <div class="qa rv"><button type="button" class="q" aria-expanded="false"><span class="ar">▸</span> Do I need omarchy?</button><div class="a"><div><p>No. It's built in that spirit, but any Arch or Arch-based system with pacman works. Webapps need a Chromium-family browser because they use <code>--app</code> mode, which Firefox doesn't have.</p></div></div></div>
+          <div class="qa rv"><button type="button" class="q" aria-expanded="false"><span class="ar">▸</span> Where does it keep its config?</button><div class="a"><div><p><code>~/.config/pacpad/config.toml</code>, and every key is optional: <code>browser</code>, <code>terminal</code> and <code>aur_helper</code>. The package index cache lives in <code>~/.cache/pacpad/index.bin</code>.</p></div></div></div>
+          <div class="qa rv"><button type="button" class="q" aria-expanded="false"><span class="ar">▸</span> What does the Updates tab do today?</button><div class="a"><div><p>It's a placeholder. The version-by-version list of pending updates is still to come. Pressing <kbd>u</kbd> on the Installed tab runs a full system update now.</p></div></div></div>
+          <div class="qa rv"><button type="button" class="q" aria-expanded="false"><span class="ar">▸</span> How small can my terminal be?</button><div class="a"><div><p>60 columns by 12 rows. Below that, pacpad asks you to make the window bigger instead of drawing a broken layout.</p></div></div></div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="site-foot">
+      <span>pacpad 0.1.0 · Apache-2.0 · <a href="https://github.com/ric-v/pacpad">github.com/ric-v/pacpad</a> · <a href="https://github.com/ric-v/pacpad/issues">issues</a></span>
+      <span>made by <a href="https://me.astrx.dev/">Richie Varghese</a> · one of the small tools on <a href="https://astrx.dev/">astrx.dev</a></span>
+    </footer>
+  </main>
+
+  <!-- status line, vim style -->
+  <div class="status" id="status" aria-hidden="true">
+    <span class="mode" id="mode">NORMAL</span>
+    <span class="hints" id="hints"></span>
+    <span class="pos"><span id="pos-name">pacpad</span> <span id="pos-pct">top</span></span>
+  </div>
+
+  <!-- command palette -->
+  <div class="ov" id="palette" hidden>
+    <div class="pal" role="dialog" aria-modal="true" aria-label="Command palette">
+      <div class="pal-t">Search</div>
+      <label class="pal-in"><span class="c-d">Search:</span> <span class="c-a">›</span> <input id="pal-q" autocomplete="off" spellcheck="false" aria-label="Search commands and sections" aria-controls="pal-list" /></label>
+      <ul class="pal-list" id="pal-list" role="listbox"></ul>
+      <div class="pal-f"><span><kbd>↑↓</kbd> nav</span><span><kbd>enter</kbd> run</span><span><kbd>esc</kbd> close</span><span class="pal-n" id="pal-n"></span></div>
+    </div>
+  </div>
+
+  <!-- help -->
+  <div class="ov" id="help" hidden>
+    <div class="pal helpbox" role="dialog" aria-modal="true" aria-label="Keyboard shortcuts">
+      <div class="pal-t">Keybindings</div>
+      <div class="help-cols">
+        <div><h3 class="c-a">site</h3>
+          <p><kbd>1</kbd>-<kbd>7</kbd><span>jump to section</span></p>
+          <p><kbd>j</kbd> <kbd>k</kbd><span>next · previous panel</span></p>
+          <p><kbd>g</kbd> <kbd>G</kbd><span>top · bottom</span></p>
+          <p><kbd>/</kbd> <kbd>ctrl+k</kbd><span>command palette</span></p>
+          <p><kbd>y</kbd><span>copy build command</span></p>
+          <p><kbd>?</kbd><span>this help</span></p>
+        </div>
+        <div><h3 class="c-a">demo &amp; shell</h3>
+          <p><kbd>d</kbd><span>drive the demo</span></p>
+          <p><kbd>a</kbd><span>toggle demo autoplay</span></p>
+          <p><kbd>i</kbd><span>type in the shell</span></p>
+          <p><kbd>^X</kbd> <kbd>:q</kbd><span>leave nano · vim in the shell</span></p>
+          <p><kbd>esc</kbd><span>let go, back to the page</span></p>
+          <p><kbd>enter</kbd><span>open the focused panel</span></p>
+        </div>
+      </div>
+      <div class="pal-f"><span><kbd>esc</kbd> <kbd>?</kbd> close</span><span>the mouse works everywhere too</span></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="js/data.js"></script>
+  <script src="js/repo-snapshot.js"></script>
+  <script src="js/vfs.js"></script>
+  <script src="js/editor.js"></script>
+  <script src="js/demo.js"></script>
+  <script src="js/shell.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
