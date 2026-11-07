@@ -208,7 +208,7 @@
       <div class="pane" data-title="5 install" data-title-r="rust ≥ 1.82 · build from source">
         <div class="inst-grid">
           <div class="shell-wrap rv">
-            <div class="shell" id="shell" aria-label="Simulated terminal. Type help for commands.">
+            <div class="shell" id="shell" aria-label="Simulated terminal with the pacpad repo checked out. Type help for commands.">
               <div class="sh-out" role="log" aria-live="polite"></div>
               <label class="sh-line"><span class="sh-ps1"></span><input class="sh-in" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="Shell input" /></label>
             </div>
@@ -336,6 +336,7 @@
           <p><kbd>d</kbd><span>drive the demo</span></p>
           <p><kbd>a</kbd><span>toggle demo autoplay</span></p>
           <p><kbd>i</kbd><span>type in the shell</span></p>
+          <p><kbd>^X</kbd> <kbd>:q</kbd><span>leave nano · vim in the shell</span></p>
           <p><kbd>esc</kbd><span>let go, back to the page</span></p>
           <p><kbd>enter</kbd><span>open the focused panel</span></p>
         </div>
@@ -347,6 +348,9 @@
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script src="js/data.js"></script>
+  <script src="js/repo-snapshot.js"></script>
+  <script src="js/vfs.js"></script>
+  <script src="js/editor.js"></script>
   <script src="js/demo.js"></script>
   <script src="js/shell.js"></script>
   <script src="js/app.js"></script>

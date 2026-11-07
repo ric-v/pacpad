@@ -171,11 +171,14 @@
     normal: [["1-7", "sections"], ["j/k", "panels"], ["/", "search"], ["d", "drive demo"], ["i", "shell"], ["y", "copy build"], ["?", "keys"]],
     demo: [["keys", "go to pacpad"], ["esc", "let go"], ["F1", "pacpad help"], ["q", "quit pacpad"]],
     shell: [["enter", "run"], ["↑↓", "history"], ["tab", "complete"], ["esc", "back to page"]],
-    search: [["↑↓", "nav"], ["enter", "run"], ["esc", "close"]]
+    search: [["↑↓", "nav"], ["enter", "run"], ["esc", "close"]],
+    nano: [["^O", "write"], ["^X", "exit"], ["^W", "search"], ["^K", "cut"], ["^U", "paste"], ["^G", "help"]],
+    vim: [["i", "insert"], ["esc", "normal"], [":w", "write"], [":q", "quit"], ["/", "search"]],
+    less: [["space", "page"], ["/", "search"], ["g/G", "top/end"], ["q", "quit"]]
   };
   function setMode(m) {
     mode = m;
-    modeEl.textContent = { normal: "NORMAL", demo: "DEMO", shell: "SHELL", search: "SEARCH" }[m];
+    modeEl.textContent = { normal: "NORMAL", demo: "DEMO", shell: "SHELL", search: "SEARCH", nano: "NANO", vim: "VIM", less: "LESS" }[m];
     modeEl.className = "mode m-" + m;
     updateHints();
   }
@@ -257,6 +260,15 @@
   var shellIn = $(".sh-in", shellEl);
   shellIn.addEventListener("focus", function () { shellWrap.classList.add("focus"); setMode("shell"); });
   shellIn.addEventListener("blur", function () { shellWrap.classList.remove("focus"); if (mode === "shell") setMode("normal"); });
+  // nano / vim / less run inside the shell box and own the keyboard while focused
+  var progMode = null;
+  document.addEventListener("pp-mode", function (e) {
+    var m = e.detail;
+    if (m === "shell") { progMode = null; setMode(document.activeElement === shellIn ? "shell" : "normal"); return; }
+    progMode = m; shellWrap.classList.add("focus"); setMode(m);
+  });
+  shellWrap.addEventListener("focusin", function (e) { if (progMode && e.target.classList.contains("ed-in")) { shellWrap.classList.add("focus"); setMode(progMode); } });
+  shellWrap.addEventListener("focusout", function (e) { if (progMode && e.target.classList.contains("ed-in")) { shellWrap.classList.remove("focus"); if (mode === progMode) setMode("normal"); } });
   new IntersectionObserver(function (e, o) { if (e[0].isIntersecting) { shell.start(); o.disconnect(); } }, { threshold: 0.35 }).observe(shellEl);
   function focusShell() {
     var r = shellEl.getBoundingClientRect();
@@ -399,6 +411,11 @@
     ["", "run: pacpad webapp add Notion https://notion.so", "shell", function () { window.ppRunInShell("pacpad webapp add Notion https://notion.so"); }],
     ["", "run: pacpad --dry-run tui add htop htop", "shell", function () { window.ppRunInShell("pacpad --dry-run tui add htop htop"); }],
     ["", "run: cat ~/.config/pacpad/config.toml", "shell", function () { window.ppRunInShell("cat ~/.config/pacpad/config.toml"); }],
+    ["", "run: nano README.md", "shell", function () { window.ppRunInShell("nano README.md"); }],
+    ["", "run: vim src/main.rs", "shell", function () { window.ppRunInShell("vim src/main.rs"); }],
+    ["", "run: tree -L 2 src", "shell", function () { window.ppRunInShell("tree -L 2 src"); }],
+    ["", "run: cargo test", "shell", function () { window.ppRunInShell("cargo test"); }],
+    ["", "run: git log", "shell", function () { window.ppRunInShell("git log"); }],
     ["y", "copy build command", "action", function () { copy(BUILD); }],
     ["?", "keyboard shortcuts", "help", function () { openHelp(); }],
     ["", "open github.com/ric-v/pacpad", "link", function () { location.href = "https://github.com/ric-v/pacpad"; }],
